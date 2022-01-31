@@ -1,3 +1,3 @@
-Fix the leaks for searching fd in GNL
+Implement the mandatory in GNL
 
 -
