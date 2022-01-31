@@ -15,5 +15,8 @@ void	ft_putchar_fd(char c, int fd)
 
 int main()
 {
-	ft_putchar_fd(66, 1);
+	char	*str;
+	char	*str1 = "";
+	free(str1);
+	printf("%lu", sizeof(str));
 }

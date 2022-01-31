@@ -6,14 +6,14 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:10:27 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/01/30 21:45:11 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/01/31 14:03:17 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h> //have to remove!!
-// # define BUFFER_SIZE 4	//have to remove!!
+# define BUFFER_SIZE 4	//have to remove!!
 
 size_t	ft_strlen(const char *str)
 {
@@ -51,6 +51,8 @@ t_list	*ft_lstnew(char *content, int	fd)
 {
 	t_list	*result;
 
+	if (!content)
+		return (NULL);
 	result = (t_list *)malloc(sizeof(t_list));
 	if (!result)
 		return (NULL);
@@ -90,8 +92,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*result;
 	char	*temp;
+	char	*s1_free;
 
 	temp = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	s1_free = (char *)s1;
 	if (!temp)
 		return (0);
 	result = temp;
@@ -100,7 +104,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (*s2)
 		*(temp++) = *(s2++);
 	*temp = '\0';
-//	free((void *)s1);
+	free((void *)s1_free);
 	return (result);
 }
 
@@ -128,15 +132,11 @@ char	*save_result(char *temp_buff)
 	i++;
 
 	while (temp_buff[i])
-	{
-		rtn[j] = temp_buff[i];
-		j++;
-		i++;
-	}
+		rtn[j++] = temp_buff[i++];
 
-	rtn[j] = temp_buff[i];
+	rtn[j] = '\0';
 
-	// free(temp_buff);
+	free(temp_buff);
 
 	return (rtn);
 }
@@ -149,9 +149,7 @@ char	*set_result(char *temp_buff)
 	i = 0;
 	
 	while (temp_buff[i] && temp_buff[i] != '\n')
-	{
 		i++;
-	}
 
 	if (temp_buff[i] == '\n')
 		i++;
@@ -186,12 +184,12 @@ int	is_endline(char *str, int size)
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != '\n' && i < size)
+	while (str[i] && str[i] != '\n' && i < size - 1)
 	{
 		i++;
 	}
 	
-	if (str[i] == '\n')
+	if (str[i] == '\n' || !str[i])
 		return (1);
 	
 	return (0);
@@ -208,14 +206,18 @@ char	*get_next_line(int fd)
 	// int		i = 0;
 	ssize_t	len;
 
+	rtn = NULL;
+
+	if (!ft_lstfind(fd, buff_lst))
+		ft_lstadd_back(&buff_lst, ft_lstnew(ft_strdup(""), fd));
+
+	curr_lst = ft_lstfind(fd, buff_lst);
+	if (!curr_lst || !curr_lst->content)
+		return (NULL);
 
 	buff = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buff)
 		return (NULL);
-
-	rtn = NULL;
-
-	ft_lstadd_back(&buff_lst, ft_lstnew(ft_strdup(""), fd));
 
 	while (1)
 	{
@@ -226,23 +228,12 @@ char	*get_next_line(int fd)
 
 		// printf("<1>inside read buff: %s\n", buff);
 
-		curr_lst = ft_lstfind(fd, buff_lst);
-		if (!curr_lst)
-			return (NULL);
-
-		// printf("<2>curr_lst_outer! %s\n", curr_lst->content);
+		curr_lst->content = ft_strjoin(curr_lst->content, buff);
 		
-		if (!is_endline(buff, BUFFER_SIZE))
-		{
-			curr_lst->content = ft_strjoin(curr_lst->content, buff);
-			// printf("curr_lst %s\n", curr_lst->content);
-		}
-
-		else if (is_endline(buff, BUFFER_SIZE) == 1)
+		if (is_endline(buff, BUFFER_SIZE) || len <= 0)
 		{
 			// printf("is_endline buff %s\n", buff);
 			// printf("is_endline curr_lst %s\n", curr_lst->content);
-			curr_lst->content = ft_strjoin(curr_lst->content, buff);
 			rtn = set_result(curr_lst->content);
 			curr_lst->content = save_result(curr_lst->content);
 			// printf("is_endline lower buff %s", buff);
@@ -257,14 +248,15 @@ char	*get_next_line(int fd)
 		}
 	}
 
-//	printf("last curr %s$\n", ft_lstfind(fd, buff_lst)->content);
+	//	printf("last curr %s$\n", curr_lst->content);
 
 
-	if (*(ft_lstfind(fd, buff_lst)->content))
+	if (*(curr_lst->content))
 	{
-		// printf("inside lower lstfind %s\n",ft_lstfind(fd, buff_lst)->content);
-		rtn = set_result(ft_lstfind(fd, buff_lst)->content);
-		ft_lstfind(fd, buff_lst)->content = save_result(ft_lstfind(fd, buff_lst)->content);
+		// printf("inside lower lstfind %s\n",curr_lst->content);
+		rtn = set_result(curr_lst->content);
+		curr_lst->content = save_result(curr_lst->content);
+		free(buff);
 	}
 
 
@@ -272,27 +264,27 @@ char	*get_next_line(int fd)
 }
 
 
-// #include <stdio.h>
+#include <stdio.h>
 
-// int main()
-// {
+int main()
+{
 	
-//    char   buff[BUFFER_SIZE];
-//    int    fd;
-//    int     i = 0;
-//    char *res;
+   char   buff[BUFFER_SIZE];
+   int    fd;
+   int     i = 0;
+   char *res;
 
-//    if ( 0 < ( fd = open( "./42_no_nl", O_RDONLY)))
-//    {
-// 	while ((res = get_next_line(fd)))
-// 	{
-// 		printf ("★★★(%d) result: %s$\n", i++, res );
-// 		free(res);
-// 	}
-//       close(fd);
-//    }
-//    else {
-//       printf( "파일 열기에 실패했습니다.\n");
-//    }
-//    return 0;
-// }
+   if ( 0 < ( fd = open( "./test.txt", O_RDONLY)))
+   {
+	while ((res = get_next_line(fd)))
+	{
+		printf ("★★★(%d) result: %s$\n", i++, res );
+		free(res);
+	}
+      close(fd);
+   }
+   else {
+      printf( "파일 열기에 실패했습니다.\n");
+   }
+   return 0;
+}
