@@ -6,7 +6,7 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:10:27 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/01/31 21:24:48 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/01 13:18:06 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ size_t	ft_strlen(const char *str)
 
 	i = 0;
 	while (str[i])
-	{
 		i++;
-	}
 	return (i);
 }
 
@@ -104,23 +102,6 @@ void	ft_lstdel(t_list **head_lst, t_list **curr_lst)
 		temp = temp->next;
 	}
 }
- 
-// void	ft_lstadd_back(t_list **lst, t_list *new)
-// {
-// 	t_list *temp;
-
-// 	temp = *lst;
-// 	if (!lst)
-// 		return ;
-// 	if (!(*lst))
-// 		*lst = new;
-// 	else
-// 	{
-// 		while (temp->next)
-// 			temp = temp->next;
-// 		temp->next = new;
-// 	}
-// }
 
 int	ft_lstadd_front(t_list **lst, t_list *new)
 {
@@ -270,9 +251,6 @@ char	*get_next_line(int fd)
 			return (NULL);
 
 	curr_lst = ft_lstfind(fd, buff_lst);
-	// curr_lst 와 buff_lst 의 주소값이 동일한 것 확인
-	// free(curr_lst) 오류 없음 확인
-
 
 	buff = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buff)
@@ -296,8 +274,6 @@ char	*get_next_line(int fd)
 			break ;
 		buff[len] = '\0';
 
-		// printf("<1>inside read buff: %s\n", buff);
-
 		curr_lst->content = ft_strjoin(curr_lst->content, buff);
 
 		if (!curr_lst->content)
@@ -311,8 +287,6 @@ char	*get_next_line(int fd)
 		
 		if (is_endline(buff, BUFFER_SIZE))
 		{
-			// printf("is_endline buff %s\n", buff);
-			// printf("is_endline curr_lst %s\n", curr_lst->content);
 			rtn = set_result(curr_lst->content);
 			if (!rtn)
 			{
