@@ -6,7 +6,7 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:10:27 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/01 13:18:06 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/02 18:21:42 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,35 +361,21 @@ char	*get_next_line(int fd)
 }
 
 
+#include <fcntl.h> //have to remove!!
 #include <stdio.h>
 
 int main()
 {
-	int fd = open("42_no_nl", O_RDONLY);
-	char *str = get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
+	int fd = open("test.txt", O_RDONLY);
+	char *res;
+	int     i = 0;
+	
+	while ((res = get_next_line(fd)))
+	{
+		printf ("★★★(%d) result: %s$\n", i++, res );
+		free(res);
+	}
+	close(fd);
 
-	// close(fd);
-	// get_next_line(fd);
-	system("leaks a.out");
-	printf("%s\n", str);
-//    char   buff[BUFFER_SIZE];
-//    int    fd;
-//    int     i = 0;
-//    char *res;
-
-//    if ( 0 < ( fd = open( "./42_no_nl", O_RDONLY)))
-//    {
-// 	while ((res = get_next_line(fd)))
-// 	{
-// 		printf ("★★★(%d) result: %s$\n", i++, res );
-// 		free(res);
-// 	}
-//       close(fd);
-//    }
-//    else {
-//       printf( "파일 열기에 실패했습니다.\n");
-//    }
-//    return 0;
+	// system("leaks a.out");
 }

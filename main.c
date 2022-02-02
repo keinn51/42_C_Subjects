@@ -53,14 +53,8 @@ t_list	*ft_lstnew(char *content, int	fd)
 
 int main()
 {
-	char	*str = malloc(5);
 
-	str[0] = 'a';
-		str[1] = 'a';
-			str[2] = 'a';
+	printf("%lu", sizeof(size_t));
 
-	printf("%s", str);
-	free(str);
-	str[0] = 'c';
 	// printf("%s", str);
 }
