@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:25:01 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/02 17:58:55 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/03 00:54:12 by kyungsle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	set_result(t_list *curr_ptr, char *nlptr, char **res)
 			return (-1);
 		free(curr_ptr->content);
 		curr_ptr->content = temp;
-		return (1);
+		return (ft_strlen(curr_ptr->content) > 0);
 	}
 	if (*(curr_ptr->content) == '\0')
 		*res = NULL;
@@ -45,23 +45,25 @@ int	read_file(t_list *curr_ptr, char *buff, char **res)
 	char		*nlptr;
 	char		*temp;
 	ssize_t		len;
+	int			eof;
 
+	eof = 0;
 	while (1)
 	{
 		nlptr = ft_strchr(curr_ptr->content, '\n');
-		if (nlptr)
+		if (nlptr || eof)
 			break ;
 		len = read(curr_ptr->fd, buff, BUFFER_SIZE);
 		if (len == -1)
 			return (-1);
-		if (len == 0)
-			break ;
 		buff[len] = '\0';
 		temp = ft_strjoin(curr_ptr->content, buff);
 		if (!temp)
 			return (-1);
 		free(curr_ptr->content);
 		curr_ptr->content = temp;
+		if (len < BUFFER_SIZE)
+			eof = 1;
 	}
 	return (set_result(curr_ptr, nlptr, res));
 }

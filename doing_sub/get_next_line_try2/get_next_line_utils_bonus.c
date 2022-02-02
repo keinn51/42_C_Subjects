@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:24:55 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/02 17:55:23 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/03 00:55:07 by kyungsle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:10:27 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/02 18:21:42 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/03 00:07:20 by kyungsle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,19 +363,39 @@ char	*get_next_line(int fd)
 
 #include <fcntl.h> //have to remove!!
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-int main()
+// int main()
+// {
+// 	int 	fd = open("test", O_RDONLY);
+// 	char 	*res;
+// 	int     i = 0;
+
+// 	printf("%s$", get_next_line(fd));
+// 	// printf("%s$", get_next_line(fd));
+
+// 	// while ((res = get_next_line(fd)))
+// 	// {
+// 	// 	printf ("★★★(%d) result: %s$\n", i++, res );
+// 	// 	free(res);
+// 	// }
+// 	// close(fd);
+
+// 	// system("leaks a.out");
+// }
+
+int main(int argc, char **argv)
 {
-	int fd = open("test.txt", O_RDONLY);
-	char *res;
-	int     i = 0;
-	
-	while ((res = get_next_line(fd)))
-	{
-		printf ("★★★(%d) result: %s$\n", i++, res );
-		free(res);
-	}
-	close(fd);
+	char	*str = get_next_line(fd);
+	printf("%s", str);
+
+	// while (str)
+	// {
+	// 	printf("%s", str);
+	// 	free(str);
+	// 	str = get_next_line(fd);
+	// }
 
 	// system("leaks a.out");
 }

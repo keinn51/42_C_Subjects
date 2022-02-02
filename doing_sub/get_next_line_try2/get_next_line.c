@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:25:01 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/02 21:47:58 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/03 00:53:18 by kyungsle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	set_result(t_list *curr_ptr, char *nlptr, char **res, int eof)
+int	set_result(t_list *curr_ptr, char *nlptr, char **res)
 {
 	char	*temp;
 
-	if (nlptr && !eof)
+	if (nlptr)
 	{
 		*res = ft_strndup(curr_ptr->content, nlptr - (curr_ptr->content) + 1);
 		temp = ft_strndup(nlptr + 1, ft_strlen(nlptr + 1));
@@ -24,7 +24,7 @@ int	set_result(t_list *curr_ptr, char *nlptr, char **res, int eof)
 			return (-1);
 		free(curr_ptr->content);
 		curr_ptr->content = temp;
-		return (ft_strlen(curr_ptr->content));
+		return (ft_strlen(curr_ptr->content) > 0);
 	}
 	if (*(curr_ptr->content) == '\0')
 		*res = NULL;
@@ -45,27 +45,27 @@ int	read_file(t_list *curr_ptr, char *buff, char **res)
 	char		*nlptr;
 	char		*temp;
 	ssize_t		len;
+	int			eof;
 
+	eof = 0;
 	while (1)
 	{
+		nlptr = ft_strchr(curr_ptr->content, '\n');
+		if (nlptr || eof)
+			break ;
 		len = read(curr_ptr->fd, buff, BUFFER_SIZE);
 		if (len == -1)
 			return (-1);
-		if (len == 0)
-			return (set_result(curr_ptr, nlptr, res, 1));
 		buff[len] = '\0';
 		temp = ft_strjoin(curr_ptr->content, buff);
 		if (!temp)
 			return (-1);
 		free(curr_ptr->content);
 		curr_ptr->content = temp;
-		nlptr = ft_strchr(curr_ptr->content, '\n');
 		if (len < BUFFER_SIZE)
-			return (set_result(curr_ptr, nlptr, res, 1));
-		if (nlptr)
-			break ;
+			eof = 1;
 	}
-	return (set_result(curr_ptr, nlptr, res, 0));
+	return (set_result(curr_ptr, nlptr, res));
 }
 
 t_list	*make_newlst(int fd)
@@ -137,46 +137,3 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (res);
 }
-
-#include <fcntl.h> //have to remove!!
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-
-int main()
-{
-	int 	fd = open("43_with_nl", O_RDONLY);
-	char 	*res;
-	int     i = 0;
-	
-	while ((res = get_next_line(fd)))
-	{
-		printf ("★★★(%d) result: %s$\n", i++, res );
-		free(res);
-	}
-	close(fd);
-
-	// system("leaks a.out");
-}
-
-// int main(int argc, char **argv)
-// {
-// 	int fd;
-// 	if (argc != 2)
-// 		fd = 0;
-// 	else
-// 		fd = open(argv[1], 0);
-	
-// 	char	*str = get_next_line(fd);
-// 	printf("%s", str);
-
-// 	// while (str)
-// 	// {
-// 	// 	printf("%s", str);
-// 	// 	free(str);
-// 	// 	str = get_next_line(fd);
-// 	// }
-
-// 	// system("leaks a.out");
-// }

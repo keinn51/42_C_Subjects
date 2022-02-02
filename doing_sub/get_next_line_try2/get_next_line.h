@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:24:24 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/02 21:33:12 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/03 00:52:37 by kyungsle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-
-# ifndef BUFFER_SIZE
-# define BUFFER_SIZE 41	//have to remove!!
-# endif
 
 typedef struct s_list
 {
