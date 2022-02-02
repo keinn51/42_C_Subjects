@@ -6,7 +6,7 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:24:55 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/01 13:46:49 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/02 14:15:22 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,9 @@ void	fd_lst_clear(t_list **fd_lst, t_list *curr_lst)
 	{
 		*fd_lst = curr_lst->next;
 		free(curr_lst->content);
+		curr_lst->content = NULL;
 		free(curr_lst);
+		curr_lst = NULL;
 		return ;
 	}
 	tmp = *fd_lst;
@@ -95,5 +97,7 @@ void	fd_lst_clear(t_list **fd_lst, t_list *curr_lst)
 		tmp = tmp->next;
 	tmp->next = curr_lst->next;
 	free(curr_lst->content);
+	curr_lst->content = NULL;
 	free(curr_lst);
+	curr_lst = NULL;
 }

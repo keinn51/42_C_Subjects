@@ -6,7 +6,7 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:24:24 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/01 13:36:04 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/02 13:53:17 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 256
+#  define BUFFER_SIZE 10
 # endif
 
 typedef struct s_list
 {
 	int				fd;
 	char			*content;
-	struct s_list		*next;
+	struct s_list	*next;
 }	t_list;
 
 char	*get_next_line(int fd);

@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 12:24:50 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/01 12:24:51 by kyungsle         ###   ########seoul.kr  */
+/*   Created: 2022/02/01 12:24:55 by kyungsle          #+#    #+#             */
+/*   Updated: 2022/02/02 13:38:58 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -22,21 +22,19 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *str, int c)
 {
 	size_t	i;
 
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i])
+	i = ft_strlen(str);
+	if (!c)
+		return (((char *)str + i));
+	while (*str)
 	{
-		if (s[i] == (char)c)
-			return ((char *)(s + i));
-		i++;
+		if (*str == (unsigned char)c)
+			return ((char *)str);
+		str++;
 	}
-	if ((char)c == '\0')
-		return ((char *)(s + i));
 	return (NULL);
 }
 
@@ -79,23 +77,23 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (dst - len_s1 - len_s2);
 }
 
-void	fdlst_clear(t_fd **fdlst, t_fd *target)
+void	fd_lst_clear(t_list **fd_lst, t_list *curr_lst)
 {
-	t_fd	*tmp;
+	t_list	*tmp;
 
-	if (!fdlst || !(*fdlst))
+	if (!fd_lst || !(*fd_lst))
 		return ;
-	if (*fdlst == target)
+	if (*fd_lst == curr_lst)
 	{
-		*fdlst = target->next;
-		free(target->content);
-		free(target);
+		*fd_lst = curr_lst->next;
+		free(curr_lst->content);
+		free(curr_lst);
 		return ;
 	}
-	tmp = *fdlst;
-	while (tmp && (tmp->next != target))
+	tmp = *fd_lst;
+	while (tmp && (tmp->next != curr_lst))
 		tmp = tmp->next;
-	tmp->next = target->next;
-	free(target->content);
-	free(target);
+	tmp->next = curr_lst->next;
+	free(curr_lst->content);
+	free(curr_lst);
 }

@@ -6,21 +6,21 @@
 /*   By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:25:01 by kyungsle          #+#    #+#             */
-/*   Updated: 2022/02/01 13:45:12 by kyungsle         ###   ########seoul.kr  */
+/*   Updated: 2022/02/02 14:14:22 by kyungsle         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	set_result(t_list *curr_lst, char *nptr, char **result)
+int	set_result(t_list *curr_lst, char *nptr, char **res)
 {
 	char	*temp;
 
 	if (nptr)
 	{
-		*result = ft_strndup(curr_lst->content, nptr - (curr_lst->content) + 1);
+		*res = ft_strndup(curr_lst->content, nptr - (curr_lst->content) + 1);
 		temp = ft_strndup(nptr + 1, ft_strlen(nptr + 1));
-		if (!*result || !temp)
+		if (!*res || !temp)
 			return (-1);
 		free(curr_lst->content);
 		curr_lst->content = temp;
@@ -29,10 +29,10 @@ int	set_result(t_list *curr_lst, char *nptr, char **result)
 	else
 	{
 		if (curr_lst->content && *(curr_lst->content) == '\0')
-			*result = NULL;
+			*res = NULL;
 		else
 		{
-			*result = ft_strndup(curr_lst->content, ft_strlen(curr_lst->content));
+			*res = ft_strndup(curr_lst->content, ft_strlen(curr_lst->content));
 			temp = ft_strndup("", 0);
 			free(curr_lst->content);
 			curr_lst->content = temp;
@@ -41,7 +41,7 @@ int	set_result(t_list *curr_lst, char *nptr, char **result)
 	}
 }
 
-int	read_file(t_list *curr_lst, char *buff, char **result)
+int	read_file(t_list *curr_lst, char *buff, char **res)
 {
 	char		*nptr;
 	char		*temp;
@@ -64,7 +64,7 @@ int	read_file(t_list *curr_lst, char *buff, char **result)
 		free(curr_lst->content);
 		curr_lst->content = temp;
 	}
-	return (set_result(curr_lst, nptr, result));
+	return (set_result(curr_lst, nptr, res));
 }
 
 t_list	*make_newlst(int fd)
@@ -106,13 +106,13 @@ t_list	*set_curr_lst(t_list **fd_lst, int fd)
 
 char	*get_next_line(int fd)
 {
-	static t_list		*fd_lst;
+	static t_list	*fd_lst;
 	t_list			*curr_lst;
 	char			*buff;
-	char			*result;
+	char			*res;
 	int				status;
 
-	if (fd < 0 || BUFFER_SIZE <=0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	curr_lst = set_curr_lst(&fd_lst, fd);
 	if (!curr_lst)
@@ -120,12 +120,13 @@ char	*get_next_line(int fd)
 	buff = (char *)malloc((size_t)BUFFER_SIZE + 1);
 	if (!buff)
 		return (NULL);
-	result = NULL;
-	status = read_file(curr_lst, buff, &result);
+	res = NULL;
+	status = read_file(curr_lst, buff, &res);
 	free(buff);
+	buff = NULL;
 	if (status == 0 || status == -1)
 		fd_lst_clear(&fd_lst, curr_lst);
 	if (status == -1)
 		return (NULL);
-	return (result);
+	return (res);
 }
