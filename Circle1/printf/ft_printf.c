@@ -11,51 +11,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
-#include <stdarg.h>
-#include <unistd.h>
-// #include <stdlib.h>
-
-int printf_putstr_null(char *str)
-{
-    int result;
-
-    result = 0;
-    if (!str)
-        str = "(null)";
-    while (*str)
-        result += (int)(write(1, str++, 1));
-    return (result);
-}
-
-int printf_putchar(char c)
-{
-    int result;
-
-    result = 0;
-    result += (int)(write(1, &c, 1));
-    return (result);
-}
-
-int print_adr(unsigned long int nb)
-{
-    int len;
-
-    len = 0;
-    if (nb >= 16)
-    {
-        len += print_adr(nb / 16);
-        len += print_adr(nb % 16);
-    }
-    if (nb < 16)
-    {
-        if (nb < 10)
-            len += printf_putchar(nb + 48);
-        else
-            len += printf_putchar(nb + 87);
-    }
-    return (len);
-}
+#include "ft_printf.h"
 
 int field_checker(char format, va_list *ap)
 {
@@ -63,16 +19,25 @@ int field_checker(char format, va_list *ap)
 
     result = 0;
     if (format == 'c')
-        result += printf_putchar(va_arg(*ap, int));
+        result += print_char(va_arg(*ap, int));
     else if (format == 's')
-        result += printf_putstr_null(va_arg(*ap, char *));
+        result += print_str_null(va_arg(*ap, char *));
     else if (format == 'p')
     {
         result += write(1, "0x", 2);
-        result += print_adr(va_arg(*ap, unsigned long int));
+        result += print_address(va_arg(*ap, unsigned long long int));
     }
     else if (format == 'i' || format == 'd')
-        result += printf_putstr_null(ft_itoa(va_arg(*ap, int)));
+        result += print_itoa(ft_itoa(va_arg(*ap, int)));
+    else if (format == 'u')
+        result += print_uint(va_arg(*ap, unsigned int));
+    else if (format == 'x')
+        result += print_hex(va_arg(*ap, unsigned int), 1);
+    else if (format == 'X')
+        result += print_hex(va_arg(*ap, unsigned int), 2);
+    else if (format == '%')
+		result += (int)write(1, "%", 1);
+    return (result);
 }
 
 int ft_printf(const char *format, ...)
@@ -82,21 +47,19 @@ int ft_printf(const char *format, ...)
     int result;
 
     va_start(ap, format);
+    i = 0;
+    result = 0;
     while (format[i] != '\0')
     {
         if (format[i] != '%')
             result += write(1, &format[i], 1);
-        if (format[i] == '%')
+        else if (format[i] == '%')
         {
-            result += field_checker(format[i + 1], &ap);
-            i++;
+            if (format[i + 1])
+                result += field_checker(format[(i++) + 1], &ap);
         }
         i++;
     }
     va_end(ap);
     return (result);
-}
-
-int main()
-{
 }

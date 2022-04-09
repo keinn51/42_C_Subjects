@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kyungsle <kyungsle@student.42.kr>          +#+  +:+       +#+         #
+#    By: kyungsle <kyungsle@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/14 16:53:07 by kyungsle          #+#    #+#              #
-#    Updated: 2021/12/07 13:59:25 by kyungsle         ###   ########.fr        #
+#    Updated: 2022/04/09 16:49:23 by kyungsle         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,6 @@ $(NAME): $(OBJ_FILES)
 all: $(NAME)
 
 bonus :
-	sleep 1
 	make WITH_BONUS=1 all
 
 clean:
